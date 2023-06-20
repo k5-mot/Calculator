@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,10 +12,10 @@ namespace Calculator
     public class DelegateCommand : ICommand
     {
         /// <summary>コマンドの実行時に実行するアクション。</summary>
-        private readonly Action? _execute;
+        private readonly Action _execute;
 
         /// <summary>このコマンドが実行可能かどうかを評価する関数。 このパラメーターが null の場合、コマンドは常に実行可能です。</summary>
-        private readonly Func<bool>? _canExecute;
+        private readonly Func<bool> _canExecute;
 
         /// <summary>コマンドを実行するかどうかに影響するような変更があった場合に発生します。</summary>
         public event EventHandler? CanExecuteChanged
@@ -28,7 +29,7 @@ namespace Calculator
         public DelegateCommand(Action execute)
         {
             _execute = execute;
-            _canExecute = null;
+            _canExecute = () => { return true; };
         }
 
         /// <summary>DelegateCommand クラスの新しいインスタンスを初期化します。</summary>

@@ -7,50 +7,20 @@ using System.Threading.Tasks;
 
 namespace WpfUtility
 {
-    public class ViewModelBase : INotifyPropertyChanged, IDataErrorInfo
+    /// <summary>INotifyPropertyChanged の実装を提供する ViewModel の基本実装。</summary>
+    public class ViewModelBase : INotifyPropertyChanged
     {
+        /// <summary>プロパティ値を変更するときに発生します。  </summary>
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        // INotifyPropertyChanged.PropertyChangedイベントを発生させる。
-        protected virtual void RaisePropertyChanged(string propertyName)
+        /// <summary>ViewModelBase クラスの新しいインスタンスを初期化します。</summary>
+        public ViewModelBase() { }
+
+        /// <summary>この ViewModelBase の任意のプロパティで有効な値が更新されたときに呼び出されます。変更された特定の依存プロパティは、イベント データで報告されます。  </summary>
+        protected virtual void NotifyPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-
-        // IDataErrorInfo用のエラーメッセージを保持する辞書
-        private Dictionary<string, string> _ErrorMessages = new Dictionary<string, string>();
-
-        // IDataErrorInfo.Error の実装
-        string IDataErrorInfo.Error
-        {
-            get { return (_ErrorMessages.Count > 0) ? "Has Error" : null; }
-        }
-
-        // IDataErrorInfo.Item の実装
-        string IDataErrorInfo.this[string columnName]
-        {
-            get
-            {
-                if (_ErrorMessages.ContainsKey(columnName))
-                    return _ErrorMessages[columnName];
-                else
-                    return null;
-            }
-        }
-
-        // エラーメッセージのセット
-        protected void SetError(string propertyName, string errorMessage)
-        {
-            _ErrorMessages[propertyName] = errorMessage;
-        }
-
-        // エラーメッセージのクリア
-        protected void ClearErrror(string propertyName)
-        {
-            if (_ErrorMessages.ContainsKey(propertyName))
-                _ErrorMessages.Remove(propertyName);
-        }
     }
 }
